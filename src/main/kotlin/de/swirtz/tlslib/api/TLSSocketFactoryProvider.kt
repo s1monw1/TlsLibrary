@@ -1,5 +1,6 @@
 package de.swirtz.tlslib.api
 
+import de.swirtz.tlslib.core.ExtendedSSLSocketFactory
 import org.slf4j.LoggerFactory
 import java.io.FileInputStream
 import java.nio.file.Path
@@ -11,36 +12,48 @@ import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.TrustManagerFactory
 
 @DslMarker
-annotation class CustomDSLMarker
+annotation class TlsDSLMarker
 
-@CustomDSLMarker
-object SocketFactoryProvider {
+@TlsDSLMarker
+object TLSSocketFactoryProvider {
 
-    private val LOG = LoggerFactory.getLogger(SocketFactoryProvider::class.java)
+    private val LOG = LoggerFactory.getLogger(TLSSocketFactoryProvider::class.java)
 
     var kmConfig: StoreConfiguration? = null
     var tmConfig: StoreConfiguration? = null
+    var socketConfig: SocketConfiguration? = null
 
-    @CustomDSLMarker
+    @TlsDSLMarker
     data class StoreConfiguration(var algorithm: String? = null, var storeFile: Path? = null, var password: String? = null, var fileType: String? = null)
 
-    private fun initConfig(configInit: StoreConfiguration.() -> Unit) =
+    @TlsDSLMarker
+    data class SocketConfiguration(var cipherSuites: List<String>? = null)
+
+    private fun initStoreConfig(configInit: StoreConfiguration.() -> Unit) =
             StoreConfiguration().apply(configInit)
 
+    private fun initSocketConfig(configInit: SocketConfiguration.() -> Unit) =
+            SocketConfiguration().apply(configInit)
+
+    fun sockets(configInit: SocketConfiguration.() -> Unit) {
+        this.socketConfig = initSocketConfig(configInit)
+    }
+
     fun keyManager(configInit: StoreConfiguration.() -> Unit) {
-        this.kmConfig = initConfig(configInit)
+        this.kmConfig = initStoreConfig(configInit)
     }
 
     fun trustManager(configInit: StoreConfiguration.() -> Unit) {
-        this.tmConfig = initConfig(configInit)
+        this.tmConfig = initStoreConfig(configInit)
     }
 
-    fun socketFactory(protocol: String = "TLSv1.2", configuration: SocketFactoryProvider.() -> Unit): SSLSocketFactory {
-        this.apply(configuration)
+    fun socketFactory(protocols: List<String> = listOf("TLSv1.2"), configuration: (TLSSocketFactoryProvider.() -> Unit)
+    ? = null):
+            SSLSocketFactory {
+        configuration?.invoke(this)
         LOG.debug("Creating Factory with \n$kmConfig \n$tmConfig")
 
-        with(SSLContext.getInstance(protocol)) {
-
+        val sslContext = SSLContext.getInstance(protocols[0]).apply {
             val keyManagerFactory = kmConfig?.let {
                 val defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm()
                 LOG.debug("KeyManager default algorithm: $defaultAlgorithm")
@@ -57,9 +70,10 @@ object SocketFactoryProvider {
                 instance
             }
 
-            this.init(keyManagerFactory?.keyManagers, trustManagerFactory?.trustManagers, SecureRandom())
-            return this.socketFactory
+            init(keyManagerFactory?.keyManagers, trustManagerFactory?.trustManagers, SecureRandom())
         }
+        val socketFactory = sslContext.socketFactory
+        return ExtendedSSLSocketFactory(socketFactory, protocols.toTypedArray())
     }
 
     private fun loadKeyStore(store: StoreConfiguration): KeyStore {

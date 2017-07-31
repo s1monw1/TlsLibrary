@@ -1,9 +1,17 @@
+package de.swirtz.tlslib.core
+
+/**
+ *
+ * File created on 31.07.2017.
+ */
+
 import java.net.InetAddress
 import java.net.Socket
 import javax.net.ssl.SSLSocket
 import javax.net.ssl.SSLSocketFactory
 
-class ExtendedSSLSocketFactory(val protocols: Array<String>, val cipherSuites: Array<String>, val delegate: SSLSocketFactory)
+class ExtendedSSLSocketFactory(val delegate: SSLSocketFactory, val protocols: Array<String>,
+                               val cipherSuites: Array<String> = delegate.defaultCipherSuites)
     : SSLSocketFactory() {
 
     override fun createSocket(p0: Socket?, p1: String?, p2: Int, p3: Boolean): Socket {
@@ -26,13 +34,8 @@ class ExtendedSSLSocketFactory(val protocols: Array<String>, val cipherSuites: A
         return extend(delegate.createSocket(p0, p1, p2, p3) as SSLSocket)
     }
 
-    override fun getDefaultCipherSuites(): Array<String> {
-        return protocols
-    }
-
-    override fun getSupportedCipherSuites(): Array<String> {
-        return protocols
-    }
+    override fun getDefaultCipherSuites(): Array<String> = protocols
+    override fun getSupportedCipherSuites(): Array<String> = protocols
 
     private fun extend(socket: SSLSocket): Socket = socket.apply {
         enabledCipherSuites = cipherSuites
