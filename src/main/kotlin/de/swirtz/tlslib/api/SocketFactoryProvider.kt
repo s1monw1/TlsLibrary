@@ -1,11 +1,14 @@
 package de.swirtz.tlslib.api
 
 import org.slf4j.LoggerFactory
+import java.io.FileInputStream
 import java.nio.file.Path
+import java.security.KeyStore
 import java.security.SecureRandom
 import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocketFactory
+import javax.net.ssl.TrustManagerFactory
 
 @DslMarker
 annotation class CustomDSLMarker
@@ -37,15 +40,33 @@ object SocketFactoryProvider {
         LOG.debug("Creating Factory with \n$kmConfig \n$tmConfig")
 
         with(SSLContext.getInstance(protocol)) {
-            val defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm()
-            LOG.debug("Default KeyManager arlogithm: $defaultAlgorithm")
-            val keyManagerFactory = KeyManagerFactory.getInstance(defaultAlgorithm)
-            val trustManagerFactory = null
 
+            val keyManagerFactory = kmConfig?.let {
+                val defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm()
+                LOG.debug("KeyManager default algorithm: $defaultAlgorithm")
+                val instance = KeyManagerFactory.getInstance(kmConfig?.algorithm ?: defaultAlgorithm)
+                val store = kmConfig as StoreConfiguration
+                instance.init(loadKeyStore(store), store.password?.toCharArray())
+                instance
+            }
+            val trustManagerFactory = tmConfig?.let {
+                val defaultAlgorithm = TrustManagerFactory.getDefaultAlgorithm()
+                LOG.debug("TrustManager default algorithm: $defaultAlgorithm")
+                val instance = TrustManagerFactory.getInstance(tmConfig?.algorithm ?: defaultAlgorithm)
+                instance.init(loadKeyStore(kmConfig as StoreConfiguration))
+                instance
+            }
 
-            this.init(null, null, SecureRandom())
+            this.init(keyManagerFactory?.keyManagers, trustManagerFactory?.trustManagers, SecureRandom())
             return this.socketFactory
         }
     }
+
+    private fun loadKeyStore(store: StoreConfiguration): KeyStore {
+        val keyStore = KeyStore.getInstance(store.fileType)
+        keyStore.load(FileInputStream(store.storeFile?.toFile()), store.password?.toCharArray())
+        return keyStore
+    }
+
 
 }
