@@ -33,9 +33,9 @@ object SocketFactoryProvider {
     }
 
     fun socketFactory(protocol: String = "TLSv1.2", configuration: SocketFactoryProvider.() -> Unit): SSLSocketFactory {
-        configuration()
-
+        this.apply(configuration)
         LOG.debug("Creating Factory with \n$kmConfig \n$tmConfig")
+
         with(SSLContext.getInstance(protocol)) {
             val defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm()
             LOG.debug("Default KeyManager arlogithm: $defaultAlgorithm")
