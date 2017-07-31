@@ -14,6 +14,11 @@ import javax.net.ssl.TrustManagerFactory
 @DslMarker
 annotation class TlsDSLMarker
 
+/**
+ * Provides JSSE connections
+ *
+ * https://docs.oracle.com/javase/7/docs/technotes/guides/security/jsse/JSSERefGuide.html
+ */
 @TlsDSLMarker
 object TLSSocketFactoryProvider {
 
@@ -27,7 +32,7 @@ object TLSSocketFactoryProvider {
     data class StoreConfiguration(var algorithm: String? = null, var storeFile: Path? = null, var password: String? = null, var fileType: String? = null)
 
     @TlsDSLMarker
-    data class SocketConfiguration(var cipherSuites: List<String>? = null)
+    data class SocketConfiguration(var cipherSuites: List<String>? = null, var timeout: Int? = null)
 
     private fun initStoreConfig(configInit: StoreConfiguration.() -> Unit) =
             StoreConfiguration().apply(configInit)
@@ -47,9 +52,9 @@ object TLSSocketFactoryProvider {
         this.tmConfig = initStoreConfig(configInit)
     }
 
-    fun socketFactory(protocols: List<String> = listOf("TLSv1.2"), configuration: (TLSSocketFactoryProvider.() -> Unit)
-    ? = null):
-            SSLSocketFactory {
+    fun socketFactory(protocols: List<String> = listOf("TLSv1.2"),
+                      configuration: (TLSSocketFactoryProvider.() -> Unit)? = null): SSLSocketFactory {
+
         configuration?.invoke(this)
         LOG.debug("Creating Factory with \n$kmConfig \n$tmConfig")
 
@@ -73,13 +78,12 @@ object TLSSocketFactoryProvider {
             init(keyManagerFactory?.keyManagers, trustManagerFactory?.trustManagers, SecureRandom())
         }
         val socketFactory = sslContext.socketFactory
-        return ExtendedSSLSocketFactory(socketFactory, protocols.toTypedArray())
+        val ciphers = socketConfig?.cipherSuites?.toTypedArray()
+        return ExtendedSSLSocketFactory(socketFactory, protocols.toTypedArray(), ciphers ?: socketFactory.defaultCipherSuites)
     }
 
-    private fun loadKeyStore(store: StoreConfiguration): KeyStore {
-        val keyStore = KeyStore.getInstance(store.fileType)
-        keyStore.load(FileInputStream(store.storeFile?.toFile()), store.password?.toCharArray())
-        return keyStore
+    private fun loadKeyStore(store: StoreConfiguration) = KeyStore.getInstance(store.fileType).apply {
+        load(FileInputStream(store.storeFile?.toFile()), store.password?.toCharArray())
     }
 
 

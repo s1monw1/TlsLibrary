@@ -2,9 +2,9 @@ package de.swirtz.tlslib
 
 import de.swirtz.tlslib.api.TLSSocketFactoryProvider.socketFactory
 import java.nio.file.Paths
+import java.security.Security
 
 fun main(args: Array<String>) {
-
     val fac = socketFactory {
         keyManager {
             storeFile = Paths.get("src/main/resources/koco-ps1.p12")
@@ -19,6 +19,7 @@ fun main(args: Array<String>) {
         sockets {
             cipherSuites = listOf("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
                     "TLS_DHE_RSA_WITH_AES_128_CBC_SHA", "TLS_DHE_RSA_WITH_AES_256_CBC_SHA")
+            timeout = 10_000
         }
     }
 

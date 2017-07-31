@@ -11,7 +11,7 @@ import javax.net.ssl.SSLSocket
 import javax.net.ssl.SSLSocketFactory
 
 class ExtendedSSLSocketFactory(val delegate: SSLSocketFactory, val protocols: Array<String>,
-                               val cipherSuites: Array<String> = delegate.defaultCipherSuites)
+                               val cipherSuites: Array<String> = delegate.defaultCipherSuites, var timeout: Int = 0)
     : SSLSocketFactory() {
 
     override fun createSocket(p0: Socket?, p1: String?, p2: Int, p3: Boolean): Socket {
@@ -40,5 +40,6 @@ class ExtendedSSLSocketFactory(val delegate: SSLSocketFactory, val protocols: Ar
     private fun extend(socket: SSLSocket): Socket = socket.apply {
         enabledCipherSuites = cipherSuites
         enabledProtocols = protocols
+        soTimeout = timeout
     }
 }
