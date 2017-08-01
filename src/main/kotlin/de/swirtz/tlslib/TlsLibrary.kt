@@ -1,27 +1,27 @@
 package de.swirtz.tlslib
 
-import de.swirtz.tlslib.api.TLSSocketFactoryProvider.socketFactory
+import de.swirtz.tlslib.api.socketFactory
 import java.nio.file.Paths
-import java.security.Security
+
 
 fun main(args: Array<String>) {
     val fac = socketFactory {
-        keyManager {
-            storeFile = Paths.get("src/main/resources/koco-ps1.p12")
-            password = "12345678"
-            fileType = "pkcs12"
-        }
-        trustManager {
-            storeFile = Paths.get("src/main/resources/server_truststore.jks")
-            password = "123456"
-            fileType = "jks"
-        }
-        sockets {
-            cipherSuites = listOf("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-                    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA", "TLS_DHE_RSA_WITH_AES_256_CBC_SHA")
-            timeout = 10_000
-        }
-    }
+                keyManager {
+                    storeFile = Paths.get("certsandstores/clientkeystore")
+                    password = "123456"
+                    fileType = "jks"
+                }
+                trustManager {
+                    storeFile = Paths.get("certsandstores/myTruststore")
+                    password = "123456"
+                    fileType = "jks"
+                }
+                sockets {
+                    cipherSuites = listOf("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                            "TLS_DHE_RSA_WITH_AES_128_CBC_SHA", "TLS_DHE_RSA_WITH_AES_256_CBC_SHA")
+                    timeout = 10_000
+                }
+            }
 
     val socket = fac.createSocket("www.kotlinlang.org", 443)
     println("Connected: ${socket.isConnected}")

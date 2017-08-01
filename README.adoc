@@ -1,0 +1,34 @@
+= TLS Library
+
+== Basics
+
+=== TODO
+
+a) Server is authenticated only
+b) Client is authenticated by server too (Mutual Authentication)
+
+.Keystore (JKS, PKCS12)
+
+contains private key(s) and certificate(s) used by TLS/SSL servers/clients to authenticate themselves to clients/servers.
+
+.Truststore (JKS)
+
+contains certificates of trusted servers/clients or trusted CAs, no key(s) contained
+
+== Using keytool
+
+1. Create your own KeyStore in JKS format
+
+CA Create: https://stackoverflow.com/questions/21297139/how-do-you-sign-certificate-signing-request-with-your-certification-authority
+
+*Create PrivateKey:* keytool -keystore clientkeystore -genkey -alias client
+*Create Certificate signing request:* keytool -keystore clientkeystore -certreq -alias client -keyalg rsa -file client.csr
+*Sign the CSR*: openssl  x509  -req  -CA ca-certificate.pem.txt -CAkey ca-key.pem.txt -in client.csr -out client.cer  -days 365  -CAcreateserial
+
+keytool -import -keystore clientkeystore -file ca-certificate.pem.txt
+keytool –import –keystore clientkeystore –file client.cer –alias client -alias theCARoot
+
+https://docs.oracle.com/cd/E19509-01/820-3503/6nf1il6er/
+
+2. Creating a truststore
+
