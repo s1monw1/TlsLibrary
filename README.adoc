@@ -8,6 +8,12 @@ Provides API for creating basic SSL/TLS connections with {jsse}. The Library is 
 
 *disclaimer*: _The current Version is not optimized for Java yet_
 
+== Motivation
+
+Complex JSSE structure - always hard to setup a non-default ``SocketFactory``.
+
+image::images/classhierarchy_jsse.jpg[]
+
 == Usage Demo
 
 === Creating a client socket for mutual authentication (client keystore must be provided):
