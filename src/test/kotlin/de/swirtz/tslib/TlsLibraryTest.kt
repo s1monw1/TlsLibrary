@@ -1,3 +1,5 @@
+package de.swirtz.tslib
+
 import de.swirtz.tlslib.api.serverSocketFactory
 import de.swirtz.tlslib.api.socketFactory
 import de.swirtz.tlslib.server.TLSServer
