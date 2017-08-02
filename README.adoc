@@ -8,6 +8,49 @@ Provides API for creating basic SSL/TLS connections with {jsse}. The Library is 
 
 *disclaimer*: _The current Version is not optimized for Java yet_
 
+== Usage Demo
+
+=== Creating a client socket for mutual authentication (client keystore must be provided):
+
+[source, kotlin]
+----
+   val fac = socketFactory {
+        keyManager {
+            storeFile = Paths.get("certsandstores/clientkeystore")
+            password = "123456"
+            fileType = "jks"
+        }
+        trustManager {
+            storeFile = Paths.get("certsandstores/myTruststore")
+            password = "123456"
+            fileType = "jks"
+        }
+        sockets {
+            cipherSuites = listOf("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA", "TLS_DHE_RSA_WITH_AES_256_CBC_SHA")
+            timeout = 10_000
+        }
+    }
+
+    val socket = fac.createSocket("192.168.3.10", 443)
+
+----
+
+=== Creating a server socket with simple keystore (no client auth required)
+
+[source, kotlin]
+----
+  val fac = serverSocketFactory {
+            keyManager {
+                storeFile = Paths.get("certsandstores/clientkeystore")
+                password = "123456"
+                fileType = "jks"
+            }
+        }
+
+        val accept = fac.createServerSocket(443).accept()
+    }
+----
 
 == Basics
 
@@ -15,6 +58,8 @@ Provides API for creating basic SSL/TLS connections with {jsse}. The Library is 
 
 a) Server is authenticated by the client only +
 b) Client is authenticated by server additionally to a) (*Mutual Authentication*)
+
+=== Terms
 
 .Keystore (JKS, PKCS12)
 
@@ -24,9 +69,11 @@ Contains private key(s) and certificate(s) used by TLS/SSL servers/clients to au
 
 Contains certificates of trusted servers/clients or trusted CAs, no key(s) contained
 
-== Using keytool
+=== Appendix A: Using keytool for creating your own stores
 
-=== Create your own KeyStore in JKS format
+See this tutorial for more details: https://docs.oracle.com/cd/E19509-01/820-3503/6nf1il6er/
+
+==== Create your own KeyStore in JKS format
 
 1. CA Create: https://stackoverflow.com/questions/21297139/how-do-you-sign-certificate-signing-request-with-your-certification-authority
 
@@ -37,7 +84,12 @@ Contains certificates of trusted servers/clients or trusted CAs, no key(s) conta
 4. keytool -import -keystore clientkeystore -file ca-certificate.pem.txt
 5. keytool –import –keystore clientkeystore –file client.cer –alias client -alias theCARoot
 
-https://docs.oracle.com/cd/E19509-01/820-3503/6nf1il6er/
 
-=== Creating a TrustStore
+====  Creating a TrustStore
+
+Simply add your CAs to a keystore...
+
+1. keytool -import -file ca.cert -alias firstCA -keystore myTrustStore
+
+=== Appendix X...
 
