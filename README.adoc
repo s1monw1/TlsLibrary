@@ -1,20 +1,28 @@
-:jsse: http://docs.oracle.com/javase/7/docs/technotes/guides/security/jsse/JSSERefGuide.html[JSSE]
+:jsse: http://docs.oracle.com/javase/7/docs/technotes/guides/security/jsse/JSSERefGuide.html[Java Secure Socket Extension, JSSE]
 :kotlin: http://kotlinlang.org/[Kotlin]
 
 
 = TLS Library
 
-Provides API for creating basic SSL/TLS connections with {jsse}. The Library is implemented in {kotlin} and is supposed to be used with, at least, Java and Kotlin.
+This library provides an API for creating basic SSL/TLS connections with standard {jsse}.
+The Library is implemented in {kotlin} and is also supposed to be used with Java in feature versions.
+The Kotlin API is implemented with a _"type-safe builder"_ approach, which is quite popular in the Groovy community.
 
-*disclaimer*: _The current Version is not optimized for Java yet_
+*Disclaimer*: _The current Version is not optimized for Java yet_
 
 == Motivation
 
-Complex JSSE structure - always hard to setup a non-default ``SocketFactory``.
+If you also find it hard to use the complex JSSE structure to create your SSL sockets, which also generates lots of boilerplate when used directly, this tool is what you've been looking for.
+
 
 image::images/classhierarchy_jsse.jpg[]
 
-== Usage Demo
+
+The library provides means for creating `SSLSocketFactories` that can be used for most use cases where TLS/SSL connections are required. It's also supposed to provide usage examples and even sample implementations like SSL enabled servers, Apache Http Clients, etc. you can use directly in your application.
+
+== Demo of Kotlin DSL
+
+In the following you can see some basic examples of using the Kotlin DSL for setting up ssl-(server)-socket-factories.
 
 === Creating a client socket for mutual authentication (client keystore must be provided):
 
@@ -60,7 +68,9 @@ image::images/classhierarchy_jsse.jpg[]
 
 == Basics
 
-=== SSL/TLS Scenarios
+TLS/SSL are cryptographic protocols used to encrypt computer network communication.
+
+=== TLS Scenarios
 
 a) Server is authenticated by the client only +
 b) Client is authenticated by server additionally to a) (*Mutual Authentication*)
@@ -69,11 +79,11 @@ b) Client is authenticated by server additionally to a) (*Mutual Authentication*
 
 .Keystore (JKS, PKCS12)
 
-Contains private key(s) and certificate(s) used by TLS/SSL servers/clients to authenticate themselves to clients/servers.
+Contains private key(s) and certificate(s) used by TLS/SSL servers/clients to authenticate themselves to the other party.
 
 .Truststore (JKS)
 
-Contains certificates of trusted servers/clients or trusted CAs, no key(s) contained
+Contains certificates of trusted servers/clients or trusted CAs, no key(s) contained.
 
 === Appendix A: Using keytool for creating your own stores
 
