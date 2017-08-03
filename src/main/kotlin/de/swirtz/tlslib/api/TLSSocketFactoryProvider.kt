@@ -30,7 +30,7 @@ class TLSSocketFactoryProvider {
     data class StoreConfiguration(var algorithm: String? = null, var storeFile: Path? = null, var password: String? = null, var fileType: String = "JKS")
 
     @TlsDSLMarker
-    data class SocketConfiguration(var cipherSuites: List<String>? = null, var timeout: Int? = null)
+    data class SocketConfiguration(var cipherSuites: List<String>? = null, var timeout: Int? = null, var clientAuth: Boolean = false)
 
     private fun initStoreConfig(configInit: StoreConfiguration.() -> Unit) =
             StoreConfiguration().apply(configInit)

@@ -49,7 +49,7 @@ class ExtendedSSLSocketFactory(val delegate: SSLSocketFactory, val protocols: Ar
 
 
 class ExtendedSSLServerSocketFactory(val delegate: SSLServerSocketFactory, val protocols: Array<String>,
-                                     val cipherSuites: Array<String> = delegate.defaultCipherSuites, var timeout: Int = 0)
+                                     val cipherSuites: Array<String> = delegate.defaultCipherSuites, var timeout: Int = 0, var clientAuth: Boolean = false)
     : SSLServerSocketFactory() {
     override fun createServerSocket(p0: Int): ServerSocket {
         return extend(delegate.createServerSocket(p0) as SSLServerSocket)
@@ -67,7 +67,7 @@ class ExtendedSSLServerSocketFactory(val delegate: SSLServerSocketFactory, val p
     override fun getSupportedCipherSuites(): Array<String> = protocols
 
     private fun extend(socket: SSLServerSocket): SSLServerSocket = socket.apply {
-        needClientAuth =false
+        needClientAuth = clientAuth
 
         enabledCipherSuites = cipherSuites
         enabledProtocols = protocols

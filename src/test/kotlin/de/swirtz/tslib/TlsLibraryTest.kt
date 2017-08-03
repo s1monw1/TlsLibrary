@@ -57,6 +57,7 @@ class TlsLibraryTest {
                 fileType = "jks"
             }
             sockets {
+                clientAuth = true
                 timeout = 10_000
             }
         }
