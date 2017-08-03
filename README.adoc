@@ -29,21 +29,17 @@ In the following you can see some basic examples of using the Kotlin DSL for set
 [source, kotlin]
 ----
    val fac = createSocketFactory {
-        keyManager {
-            storeFile = Paths.get("certsandstores/clientkeystore")
-            password = "123456"
-            fileType = "jks"
-        }
-        trustManager {
-            storeFile = Paths.get("certsandstores/myTruststore")
-            password = "123456"
-            fileType = "jks"
-        }
-        sockets {
-            cipherSuites = listOf("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-                    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA", "TLS_DHE_RSA_WITH_AES_256_CBC_SHA")
-            timeout = 10_000
-        }
+               keyManager {
+                   open("certsandstores/clientkeystore") withPass "123456" beingA "jks"
+               }
+               trustManager {
+                   open("certsandstores/myTruststore") withPass "123456" beingA "jks"
+               }
+               sockets {
+                   cipherSuites = listOf("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                           "TLS_DHE_RSA_WITH_AES_128_CBC_SHA", "TLS_DHE_RSA_WITH_AES_256_CBC_SHA")
+                   timeout = 10_000
+               }
     }
 
     val socket = fac.createSocket("192.168.3.10", 443)
@@ -55,11 +51,9 @@ In the following you can see some basic examples of using the Kotlin DSL for set
 [source, kotlin]
 ----
   val fac = createServerSocketFactory {
-            keyManager {
-                storeFile = Paths.get("certsandstores/clientkeystore")
-                password = "123456"
-                fileType = "jks"
-            }
+           keyManager {
+               open("certsandstores/clientkeystore") withPass "123456" beingA "jks"
+           }
         }
 
         val accept = fac.createServerSocket(443).accept()
