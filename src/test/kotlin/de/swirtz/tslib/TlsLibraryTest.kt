@@ -5,21 +5,37 @@ import de.swirtz.tlslib.api.socketFactory
 import de.swirtz.tlslib.server.TLSServer
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.runBlocking
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import java.nio.file.Paths
-import org.junit.Assert.assertEquals
 import java.io.DataOutputStream
+import java.nio.file.Paths
+import javax.net.ssl.SSLSocketFactory
+import kotlin.test.assertTrue
 
 class TlsLibraryTest {
 
-    var tlsServer: TLSServer? = null
+    lateinit var tlsServer: TLSServer
 
     @Before
     fun setup() = startServer()
 
     @Test
     fun firstTest() {
+        val socket = createClientSocketFactory().createSocket("localhost", 9333)
+        socket.use {
+            DataOutputStream(it.getOutputStream()).use {
+                it.writeUTF("Hello ")
+                it.writeUTF("World")
+                it.writeUTF("!")
+            }
+        }
+        runBlocking { delay(1000) }
+        assertEquals("Hello World!", tlsServer.getLastMsg())
+        assertTrue { socket.isClosed }
+    }
+
+    private fun createClientSocketFactory(): SSLSocketFactory {
         val fac = socketFactory {
             trustManager {
                 storeFile = Paths.get("certsandstores/myTruststore")
@@ -27,18 +43,10 @@ class TlsLibraryTest {
                 fileType = "jks"
             }
             sockets {
-                //                cipherSuites = listOf("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-//                        "TLS_DHE_RSA_WITH_AES_128_CBC_SHA", "TLS_DHE_RSA_WITH_AES_256_CBC_SHA")
                 timeout = 10_000
             }
         }
-        fac.createSocket("localhost", 9333).use {
-            DataOutputStream(it.getOutputStream()).use {
-                it.writeUTF("Hello World")
-            }
-        }
-        runBlocking { delay(1000) }
-        assertEquals("Hello World", tlsServer?.getLastMsg())
+        return fac
     }
 
     private fun startServer() {
@@ -49,13 +57,11 @@ class TlsLibraryTest {
                 fileType = "jks"
             }
             sockets {
-                //                cipherSuites = listOf("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-//                        "TLS_DHE_RSA_WITH_AES_128_CBC_SHA", "TLS_DHE_RSA_WITH_AES_256_CBC_SHA")
                 timeout = 10_000
             }
         }
 
         tlsServer = TLSServer(9333, fac)
-        tlsServer?.start()
+        tlsServer.start()
     }
 }
