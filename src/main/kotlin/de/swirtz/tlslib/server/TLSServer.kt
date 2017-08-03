@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.net.ServerSocketFactory
 
 /**
- * Creates Socket with supplied socketFactory and waits for a client to connect
+ * Creates Socket with supplied createSocketFactory and waits for a client to connect
  */
 class TLSServer(val port: Int, val socketFactory: ServerSocketFactory) {
 

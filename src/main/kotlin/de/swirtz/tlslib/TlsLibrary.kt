@@ -4,6 +4,7 @@ import de.swirtz.tlslib.api.socketFactory
 import java.nio.file.Paths
 
 
+
 fun main(args: Array<String>) {
     val fac = socketFactory {
         keyManager {
@@ -24,10 +25,5 @@ fun main(args: Array<String>) {
     }
 
     val socket = fac.createSocket("192.168.3.200", 9443)
-//    HttpsURLConnection.setDefaultHostnameVerifier { _, _ -> true }
-//    HttpsURLConnection.setDefaultSSLSocketFactory(fac)
-//    val url = URL("xy")
-//    val con = url.openConnection() as HttpsURLConnection
-//    con.connect()
     println("Connected: ${socket.isConnected}")
 }

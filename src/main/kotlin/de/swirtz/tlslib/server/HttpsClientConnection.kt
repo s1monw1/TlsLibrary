@@ -7,7 +7,7 @@ import javax.net.ssl.SSLSession
 import javax.net.ssl.SSLSocketFactory
 
 /**
- * Creates Socket with supplied socketFactory and waits for a client to connect
+ * Creates Socket with supplied createSocketFactory and waits for a client to connect
  */
 class HttpsClientConnection(private val socketFactory: SSLSocketFactory, private val _readTimeout: Int = 0,
                             private val _hostnameVerifier: (String, SSLSession) -> Boolean = { _, _ -> true }) {

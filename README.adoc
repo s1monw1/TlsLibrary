@@ -28,7 +28,7 @@ In the following you can see some basic examples of using the Kotlin DSL for set
 
 [source, kotlin]
 ----
-   val fac = socketFactory {
+   val fac = createSocketFactory {
         keyManager {
             storeFile = Paths.get("certsandstores/clientkeystore")
             password = "123456"
@@ -54,7 +54,7 @@ In the following you can see some basic examples of using the Kotlin DSL for set
 
 [source, kotlin]
 ----
-  val fac = serverSocketFactory {
+  val fac = createServerSocketFactory {
             keyManager {
                 storeFile = Paths.get("certsandstores/clientkeystore")
                 password = "123456"
