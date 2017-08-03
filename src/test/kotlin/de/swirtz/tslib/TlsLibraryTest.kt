@@ -9,7 +9,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import java.io.DataOutputStream
-import java.nio.file.Paths
 import javax.net.ssl.SSLSocketFactory
 import kotlin.test.assertTrue
 
@@ -38,9 +37,7 @@ class TlsLibraryTest {
     private fun createClientSocketFactory(): SSLSocketFactory {
         val fac = socketFactory {
             trustManager {
-                storeFile = Paths.get("certsandstores/myTruststore")
-                password = "123456"
-                fileType = "jks"
+                open("certsandstores/myTruststore") withPass "123456" beingA "jks"
             }
             sockets {
                 timeout = 10_000
@@ -52,9 +49,7 @@ class TlsLibraryTest {
     private fun startServer() {
         val fac = serverSocketFactory {
             keyManager {
-                storeFile = Paths.get("certsandstores/clientkeystore")
-                password = "123456"
-                fileType = "jks"
+                open("certsandstores/clientkeystore") withPass "123456" beingA "jks"
             }
             sockets {
                 clientAuth = true

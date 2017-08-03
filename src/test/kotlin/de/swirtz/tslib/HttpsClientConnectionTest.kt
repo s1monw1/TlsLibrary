@@ -18,9 +18,7 @@ class HttpsClientConnectionTest {
     fun testCreateConnection() {
         val sf = socketFactory {
             trustManager {
-                storeFile = Paths.get("src/test/resources/truststore.jks")
-                password = "12345678"
-                fileType = "jks"
+                open("src/test/resources/truststore.jks") withPass "123456" beingA "jks"
             }
             sockets {
                 timeout = 10_000

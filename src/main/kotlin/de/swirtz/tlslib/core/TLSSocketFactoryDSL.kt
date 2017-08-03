@@ -2,7 +2,6 @@ package de.swirtz.tlslib.core
 
 import org.slf4j.LoggerFactory
 import java.io.FileInputStream
-import java.nio.file.Path
 import java.security.KeyStore
 import java.security.SecureRandom
 import javax.net.ssl.*
@@ -43,7 +42,7 @@ class TLSSocketFactoryProvider(init: ProviderConfiguration.() -> Unit,
                 val defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm()
                 LOG.debug("KeyManager default algorithm: $defaultAlgorithm")
                 KeyManagerFactory.getInstance(conf.algorithm ?: defaultAlgorithm).apply {
-                    init(loadKeyStore(conf), conf.password?.toCharArray())
+                    init(loadKeyStore(conf), conf.password)
                 }
             }
             val trustManagerFactory = tmConfig?.let { conf ->
@@ -59,8 +58,8 @@ class TLSSocketFactoryProvider(init: ProviderConfiguration.() -> Unit,
 
     }
 
-    private fun loadKeyStore(store: StoreConfiguration) = KeyStore.getInstance(store.fileType).apply {
-        load(FileInputStream(store.storeFile?.toFile()), store.password?.toCharArray())
+    private fun loadKeyStore(store: Store) = KeyStore.getInstance(store.fileType).apply {
+        load(FileInputStream(store.name), store.password)
     }
 }
 
@@ -68,29 +67,42 @@ class TLSSocketFactoryProvider(init: ProviderConfiguration.() -> Unit,
 annotation class TlsDSLMarker
 
 @TlsDSLMarker
-data class StoreConfiguration(var algorithm: String? = null, var storeFile: Path? = null, var password: String? = null, var fileType: String = "JKS")
-
-@TlsDSLMarker
 data class SocketConfiguration(var cipherSuites: List<String>? = null, var timeout: Int? = null, var clientAuth: Boolean = false)
 
 @TlsDSLMarker
+class Store(val name: String) {
+    var algorithm: String? = null
+    var password: CharArray? = null
+    var fileType: String = "JKS"
+
+    infix fun withPass(pass: String) = this.apply { password = pass.toCharArray() }
+
+    infix fun beingA(type: String) = apply {
+        fileType = type
+    }
+
+    infix fun using(algo: String) = this.apply { algorithm = algo }
+
+}
+
+@TlsDSLMarker
 class ProviderConfiguration {
-    var kmConfig: StoreConfiguration? = null
-    var tmConfig: StoreConfiguration? = null
+
+    var kmConfig: Store? = null
+    var tmConfig: Store? = null
     var socketConfig: SocketConfiguration? = null
 
-    private fun initStoreConfig(configInit: StoreConfiguration.() -> Unit) =
-            StoreConfiguration().apply(configInit)
+    fun open(name: String) = Store(name)
 
     fun sockets(configInit: SocketConfiguration.() -> Unit) {
         this.socketConfig = SocketConfiguration().apply(configInit)
     }
 
-    fun keyManager(configInit: StoreConfiguration.() -> Unit) {
-        this.kmConfig = initStoreConfig(configInit)
+    fun keyManager(store: () -> Store) {
+        this.kmConfig = store()
     }
 
-    fun trustManager(configInit: StoreConfiguration.() -> Unit) {
-        this.tmConfig = initStoreConfig(configInit)
+    fun trustManager(store: () -> Store) {
+        this.tmConfig = store()
     }
 }

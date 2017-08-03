@@ -8,14 +8,10 @@ import java.nio.file.Paths
 fun main(args: Array<String>) {
     val fac = socketFactory {
         keyManager {
-            storeFile = Paths.get("certsandstores/clientkeystore")
-            password = "123456"
-            fileType = "jks"
+            open("certsandstores/clientkeystore") withPass "123456" beingA "jks"
         }
         trustManager {
-            storeFile = Paths.get("certsandstores/myTruststore")
-            password = "123456"
-            fileType = "jks"
+            open("certsandstores/myTruststore") withPass "123456" beingA "jks"
         }
         sockets {
             cipherSuites = listOf("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
