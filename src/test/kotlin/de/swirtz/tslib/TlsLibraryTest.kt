@@ -2,7 +2,7 @@ package de.swirtz.tslib
 
 import de.swirtz.tlslib.api.serverSocketFactory
 import de.swirtz.tlslib.api.socketFactory
-import de.swirtz.tlslib.server.TLSServer
+import de.swirtz.tlslib.examples.TLSServer
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.assertEquals
@@ -20,17 +20,16 @@ class TlsLibraryTest {
     fun setup() = startServer()
 
     @Test
-    fun firstTest() {
+    fun clientServerCommTest() {
         val socket = createClientSocketFactory().createSocket("localhost", 9333)
+        val content = "Hello World !"
         socket.use {
             DataOutputStream(it.getOutputStream()).use {
-                it.writeUTF("Hello ")
-                it.writeUTF("World")
-                it.writeUTF("!")
+                content.split(" ").forEach(it::writeUTF)
             }
         }
         runBlocking { delay(1000) }
-        assertEquals("Hello World!", tlsServer.getLastMsg())
+        assertEquals(content.replace(" ", ""), tlsServer.getLastMsg())
         assertTrue { socket.isClosed }
     }
 

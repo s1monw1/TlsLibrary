@@ -68,7 +68,6 @@ class ExtendedSSLServerSocketFactory(val delegate: SSLServerSocketFactory, val p
 
     private fun extend(socket: SSLServerSocket): SSLServerSocket = socket.apply {
         needClientAuth = clientAuth
-
         enabledCipherSuites = cipherSuites
         enabledProtocols = protocols
         soTimeout = timeout

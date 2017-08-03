@@ -1,4 +1,4 @@
-package de.swirtz.tlslib.server
+package de.swirtz.tlslib.examples
 
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
@@ -20,15 +20,13 @@ class TLSServer(val port: Int, val socketFactory: ServerSocketFactory) {
         while (running.get()) {
             val accept = socketFactory.createServerSocket(port).accept()
             println("accepted socket $accept")
-            accept.getInputStream().use {
-                DataInputStream(it).use { d ->
-                    var readUTF = d.readUTF()
+            DataInputStream(accept.getInputStream()).use {d->
+                var readUTF = d.readUTF()
                     while (readUTF != null) {
                         println("Read: '$readUTF'")
                         read.append(readUTF)
                         readUTF = d.readUTF()
                     }
-                }
             }
         }
 

@@ -1,8 +1,6 @@
 package de.swirtz.tlslib
 
 import de.swirtz.tlslib.api.socketFactory
-import java.nio.file.Paths
-
 
 
 fun main(args: Array<String>) {

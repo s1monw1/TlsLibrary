@@ -7,9 +7,7 @@ import java.security.SecureRandom
 import javax.net.ssl.*
 
 /**
- * Provides JSSE connections
- *
- * https://docs.oracle.com/javase/7/docs/technotes/guides/security/jsse/JSSERefGuide.html
+ * Provides DSL for creating JSSE [SSLSocketFactory] and [SSLServerSocketFactory] connections
  */
 @TlsDSLMarker
 class TLSSocketFactoryProvider(init: ProviderConfiguration.() -> Unit,

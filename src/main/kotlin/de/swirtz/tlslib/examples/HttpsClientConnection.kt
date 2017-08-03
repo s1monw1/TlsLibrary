@@ -1,4 +1,4 @@
-package de.swirtz.tlslib.server
+package de.swirtz.tlslib.examples
 
 import java.net.URL
 import javax.net.ssl.HostnameVerifier

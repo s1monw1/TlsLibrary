@@ -1,10 +1,9 @@
 package de.swirtz.tslib
 
 import de.swirtz.tlslib.api.socketFactory
-import de.swirtz.tlslib.server.HttpsClientConnection
+import de.swirtz.tlslib.examples.HttpsClientConnection
 import org.junit.Ignore
 import org.junit.Test
-import java.nio.file.Paths
 
 /**
  *
