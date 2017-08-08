@@ -10,9 +10,10 @@ import javax.net.ssl.*
  * Provides DSL for creating JSSE [SSLSocketFactory] and [SSLServerSocketFactory] connections
  */
 @TlsDSLMarker
-class TLSSocketFactoryProvider(init: ProviderConfiguration.() -> Unit,
-                               val config: ProviderConfiguration = ProviderConfiguration().apply(init)) {
+class TLSSocketFactoryProvider(init: ProviderConfiguration.() -> Unit) {
 
+
+    private val config: ProviderConfiguration = ProviderConfiguration().apply(init)
     private val LOG = LoggerFactory.getLogger(TLSSocketFactoryProvider::class.java)
 
     fun createSocketFactory(protocols: List<String>): SSLSocketFactory = with(createSSLContext(protocols)) {
@@ -26,6 +27,7 @@ class TLSSocketFactoryProvider(init: ProviderConfiguration.() -> Unit,
     }
 
     private fun getOptionalCipherSuites() = config.socketConfig?.cipherSuites?.toTypedArray()
+
 
     private fun createSSLContext(protocols: List<String>): SSLContext {
         if (protocols.isEmpty()) {
@@ -73,13 +75,17 @@ class Store(val name: String) {
     var password: CharArray? = null
     var fileType: String = "JKS"
 
-    infix fun withPass(pass: String) = this.apply { password = pass.toCharArray() }
+    infix fun withPass(pass: String) = apply {
+        password = pass.toCharArray()
+    }
 
     infix fun beingA(type: String) = apply {
         fileType = type
     }
 
-    infix fun using(algo: String) = this.apply { algorithm = algo }
+    infix fun using(algo: String) = apply {
+        algorithm = algo
+    }
 
 }
 
