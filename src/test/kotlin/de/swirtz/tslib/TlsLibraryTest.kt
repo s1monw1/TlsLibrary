@@ -1,8 +1,8 @@
 package de.swirtz.tslib
 
-import de.swirtz.tlslib.api.serverSocketFactory
-import de.swirtz.tlslib.api.socketFactory
-import de.swirtz.tlslib.examples.TLSServer
+import de.swirtz.sekurity.api.serverSocketFactory
+import de.swirtz.sekurity.api.socketFactory
+import de.swirtz.sekurity.samples.TLSServer
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.assertEquals

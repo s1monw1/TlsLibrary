@@ -1,6 +1,6 @@
-package de.swirtz.tlslib
+package de.swirtz.sekurity.samples
 
-import de.swirtz.tlslib.api.socketFactory
+import de.swirtz.sekurity.api.socketFactory
 
 
 fun main(args: Array<String>) {

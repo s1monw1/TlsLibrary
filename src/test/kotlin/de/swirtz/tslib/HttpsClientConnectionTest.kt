@@ -1,14 +1,9 @@
 package de.swirtz.tslib
 
-import de.swirtz.tlslib.api.socketFactory
-import de.swirtz.tlslib.examples.HttpsClientConnection
+import de.swirtz.sekurity.api.socketFactory
+import de.swirtz.sekurity.samples.HttpsClientConnection
 import org.junit.Ignore
 import org.junit.Test
-
-/**
- *
- * File created on 03.08.2017.
- */
 
 class HttpsClientConnectionTest {
 

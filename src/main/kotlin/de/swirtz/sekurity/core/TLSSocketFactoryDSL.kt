@@ -1,4 +1,4 @@
-package de.swirtz.tlslib.core
+package de.swirtz.sekurity.core
 
 import org.slf4j.LoggerFactory
 import java.io.FileInputStream
