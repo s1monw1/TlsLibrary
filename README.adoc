@@ -2,7 +2,7 @@
 :kotlin: http://kotlinlang.org/[Kotlin]
 
 
-= TLS Library
+= SeKurity - Kotlin powered TLS library
 
 This library provides an API for creating basic SSL/TLS connections with standard {jsse}.
 The Library is implemented in {kotlin} and is also supposed to be used with Java in feature versions.
@@ -101,5 +101,4 @@ Simply add your CAs to a keystore...
 
 1. keytool -import -file ca.cert -alias firstCA -keystore myTrustStore
 
-=== Appendix X...
 
