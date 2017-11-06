@@ -26,6 +26,7 @@ dependencies {
 
     testCompile(kotlin("test-junit", kotlinVersion))
     testCompile("junit:junit:4.11")
+    testCompile("org.eclipse.jetty:jetty-server:9.4.7.v20170914")
 }
 
 repositories {

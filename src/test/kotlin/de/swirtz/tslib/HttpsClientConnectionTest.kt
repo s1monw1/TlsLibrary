@@ -2,26 +2,70 @@ package de.swirtz.tslib
 
 import de.swirtz.sekurity.api.socketFactory
 import de.swirtz.sekurity.samples.HttpsClientConnection
-import org.junit.Ignore
+import org.eclipse.jetty.server.*
+import org.eclipse.jetty.server.handler.AbstractHandler
+import org.eclipse.jetty.util.ssl.SslContextFactory
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
+import java.util.*
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import kotlin.test.assertEquals
+
 
 class HttpsClientConnectionTest {
+    private val port = 9911
 
-    @Ignore("Mock Server!")
+    private val content = "<h1>Hello World</h1>"
+    private lateinit var server: Server
+
+    @Before
+    fun startJetty() {
+        server = Server(port).apply {
+            handler = object : AbstractHandler() {
+                override fun handle(target: String, baseRequest: Request, request: HttpServletRequest, response: HttpServletResponse) {
+                    response.contentType = "text/html;charset=utf-8"
+                    response.status = HttpServletResponse.SC_OK
+                    baseRequest.isHandled = true
+                    response.writer.println(content)
+                }
+            }
+
+            val factory = SslContextFactory().apply {
+                keyStorePath = "certsandstores/clientkeystore"
+                setKeyStorePassword("123456")
+            }
+            val sslConnector = ServerConnector(this, SslConnectionFactory(factory, "http/1.1"),
+                    HttpConnectionFactory(HttpConfiguration().apply {
+                        addCustomizer(SecureRequestCustomizer())
+                    }))
+            sslConnector.port = port
+            connectors = arrayOf(sslConnector)
+
+        }
+        server.start()
+    }
+
+    @After
+    fun stopJetty() = server.stop()
+
     @Test
     fun testCreateConnection() {
         val sf = socketFactory {
             trustManager {
-                open("src/test/resources/truststore.jks") withPass "123456" beingA "jks"
+                open("certsandstores/myTruststore") withPass "123456" ofType "jks"
             }
             sockets {
                 timeout = 10_000
             }
         }
-        val inputStream = HttpsClientConnection(sf, 5000).createHttpsUrlConnection("https://192.168.3.214/connector.sds").inputStream
-        inputStream.use {
-            val s = java.util.Scanner(it).useDelimiter("\\A")
-            if (s.hasNext()) println(s.next())
-        }
+
+        HttpsClientConnection(sf, 5000).
+                createHttpsUrlConnection("https://localhost:$port/").inputStream.
+                use {
+                    val s = Scanner(it).useDelimiter("\\A")
+                    if (s.hasNext()) assertEquals(content, s.next().trim())
+                }
     }
 }

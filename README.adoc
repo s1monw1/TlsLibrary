@@ -30,10 +30,10 @@ In the following you can see some basic examples of using the Kotlin DSL for set
 ----
    val fac = createSocketFactory {
                keyManager {
-                   open("certsandstores/clientkeystore") withPass "123456" beingA "jks"
+                   open("certsandstores/clientkeystore") withPass "123456" ofType "jks"
                }
                trustManager {
-                   open("certsandstores/myTruststore") withPass "123456" beingA "jks"
+                   open("certsandstores/myTruststore") withPass "123456" ofType "jks"
                }
                sockets {
                    cipherSuites = listOf("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
@@ -52,7 +52,7 @@ In the following you can see some basic examples of using the Kotlin DSL for set
 ----
   val fac = createServerSocketFactory {
            keyManager {
-               open("certsandstores/clientkeystore") withPass "123456" beingA "jks"
+               open("certsandstores/clientkeystore") withPass "123456" ofType "jks"
            }
         }
 

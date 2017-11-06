@@ -36,7 +36,7 @@ class TLSSocketFactoryProvider(init: ProviderConfiguration.() -> Unit) {
         return SSLContext.getInstance(protocols[0]).apply {
             val kmConfig = config.kmConfig
             val tmConfig = config.tmConfig
-            LOG.debug("Creating Factory with \n$kmConfig \n$tmConfig")
+            LOG.debug("Creating Factory with \nKeyManager: $kmConfig \nTrustManager: $tmConfig")
 
             val keyManagerFactory = kmConfig?.let { conf ->
                 val defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm()
@@ -79,7 +79,7 @@ class Store(val name: String) {
         password = pass.toCharArray()
     }
 
-    infix fun beingA(type: String) = apply {
+    infix fun ofType(type: String) = apply {
         fileType = type
     }
 
