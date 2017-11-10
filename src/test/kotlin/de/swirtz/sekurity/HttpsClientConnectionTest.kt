@@ -1,4 +1,4 @@
-package de.swirtz.tslib
+package de.swirtz.sekurity
 
 import de.swirtz.sekurity.api.socketFactory
 import de.swirtz.sekurity.samples.HttpsClientConnection

@@ -1,15 +1,13 @@
-package de.swirtz.tslib
+package de.swirtz.sekurity
 
 import de.swirtz.sekurity.api.serverSocketFactory
 import de.swirtz.sekurity.api.socketFactory
 import de.swirtz.sekurity.samples.TLSServer
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.runBlocking
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import java.io.DataOutputStream
 import javax.net.ssl.SSLSocketFactory
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class TlsLibraryTest {
@@ -28,7 +26,7 @@ class TlsLibraryTest {
                 content.split(" ").forEach(it::writeUTF)
             }
         }
-        runBlocking { delay(1000) }
+        Thread.sleep(1000)
         assertEquals(content.replace(" ", ""), tlsServer.getLastMsg())
         assertTrue { socket.isClosed }
     }
