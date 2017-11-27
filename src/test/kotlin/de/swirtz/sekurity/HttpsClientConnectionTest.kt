@@ -68,4 +68,5 @@ class HttpsClientConnectionTest {
                     if (s.hasNext()) assertEquals(content, s.next().trim())
                 }
     }
+
 }

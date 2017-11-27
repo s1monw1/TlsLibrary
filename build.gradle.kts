@@ -1,11 +1,11 @@
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotlinVersion = "1.1.51"
+val kotlinVersion = "1.1.61"
 val kotlinxCoroutinesVversion = "0.19.2"
 
 plugins {
-    kotlin("jvm") version "1.1.51"
+    kotlin("jvm") version "1.1.61"
 }
 
 kotlin {
