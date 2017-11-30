@@ -2,7 +2,6 @@ package de.swirtz.sekurity.api
 
 import de.swirtz.sekurity.core.ProviderConfiguration
 import de.swirtz.sekurity.core.TLSSocketFactoryProvider
-import java.lang.reflect.ParameterizedType
 
 val defaultTLSProtocols = listOf("TLSv1.2")
 
@@ -23,3 +22,10 @@ fun socketFactory(protocols: List<String> = defaultTLSProtocols, configuration: 
             this.createSocketFactory(protocols)
         }
 
+fun main(args: Array<String>) {
+    var charAr = Array(5) { ' ' }
+    for (i in 0..4) {
+        println("Please Enter the character Number ${i + 1}")
+        charAr[i] = readLine()?.get(0) ?: throw IllegalArgumentException()
+    }
+}
