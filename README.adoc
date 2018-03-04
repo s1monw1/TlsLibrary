@@ -1,7 +1,7 @@
 :jsse: http://docs.oracle.com/javase/7/docs/technotes/guides/security/jsse/JSSERefGuide.html[Java Secure Socket Extension, JSSE]
 :kotlin: http://kotlinlang.org/[Kotlin]
 
-
+image:https://travis-ci.org/s1monw1/TlsLibrary.svg?branch=master["Build Status", link="https://travis-ci.org/s1monw1/TlsLibrary"]
 = SeKurity - Kotlin powered TLS library
 
 This library provides an API for creating basic SSL/TLS connections with standard {jsse}.
