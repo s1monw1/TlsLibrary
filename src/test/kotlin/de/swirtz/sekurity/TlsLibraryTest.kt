@@ -18,7 +18,7 @@ class TlsLibraryTest {
     fun setup() = startServer()
 
     @Test
-    fun clientServerCommTest() {
+    fun clientServerConnTest() {
         val socket = createClientSocketFactory().createSocket("localhost", 9333)
         val content = "Hello World !"
         socket.use {
