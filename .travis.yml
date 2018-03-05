@@ -3,3 +3,5 @@ language: java
 before_install:
   - chmod -R +x src 
   - chmod +x gradlew
+
+script: ./gradlew clean build --stacktrace
