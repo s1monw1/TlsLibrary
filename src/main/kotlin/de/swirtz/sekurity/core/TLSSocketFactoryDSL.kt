@@ -2,6 +2,7 @@ package de.swirtz.sekurity.core
 
 import org.slf4j.LoggerFactory
 import java.io.FileInputStream
+import java.nio.file.Paths
 import java.security.KeyStore
 import java.security.SecureRandom
 import javax.net.ssl.*
@@ -59,6 +60,7 @@ class TLSSocketFactoryProvider(init: ProviderConfiguration.() -> Unit) {
     }
 
     private fun loadKeyStore(store: Store) = KeyStore.getInstance(store.fileType).apply {
+        LOG.debug("load keystore from ${store.name}. current dir: ${Paths.get(".").toFile().absolutePath}")
         load(FileInputStream(store.name), store.password)
     }
 }
