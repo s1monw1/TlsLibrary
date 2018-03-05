@@ -33,7 +33,7 @@ class HttpsClientConnectionTest {
             }
 
             val factory = SslContextFactory().apply {
-                keyStorePath = "certsandstores/clientkeystore"
+                keyStorePath = "src/test/resources/clientkeystore"
                 setKeyStorePassword("123456")
             }
             val sslConnector = ServerConnector(this, SslConnectionFactory(factory, "http/1.1"),
@@ -54,7 +54,7 @@ class HttpsClientConnectionTest {
     fun testCreateConnection() {
         val sf = socketFactory {
             trustManager {
-                open("certsandstores/myTruststore") withPass "123456" ofType "jks"
+                open("src/test/resources/myTruststore") withPass "123456" ofType "jks"
             }
             sockets {
                 timeout = 10_000
