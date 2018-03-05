@@ -46,7 +46,13 @@ val fatJar = task("fatJar", type = Jar::class) {
 }
 
 tasks {
-    "build" {
+    withType(GradleBuild::class.java) {
         dependsOn(fatJar)
+    }
+
+    withType(Test::class.java) {
+        testLogging {
+            showStandardStreams = true
+        }
     }
 }
