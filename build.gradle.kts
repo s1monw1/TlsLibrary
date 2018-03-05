@@ -51,8 +51,6 @@ tasks {
     }
 
     withType(Test::class.java) {
-        testLogging {
-            showStandardStreams = true
-        }
+        testLogging.showStandardStreams = true
     }
 }
