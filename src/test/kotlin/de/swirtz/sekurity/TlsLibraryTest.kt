@@ -38,7 +38,7 @@ class TlsLibraryTest {
     private fun createClientSocketFactory(): SSLSocketFactory {
         val fac = socketFactory {
             trustManager {
-                open("src/test/resources/myTruststore") withPass "123456" ofType "jks"
+                open("src/test/resources/myTrustStore") withPass "123456" ofType "jks"
             }
             sockets {
                 timeout = 10_000
