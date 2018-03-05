@@ -1,0 +1,26 @@
+{	
+  "package": {	
+    "name": "bintray-demo",
+    "repo": "SeKurity",
+    "subject": "Lib for TLS/SSL Sockets",
+    "desc": "SeKurity Project",
+    "website_url": "",
+    "vcs_url": "https://github.com/s1monw1/TlsLibrary.git",
+    "licenses": ["Apache-2.0"],
+    "labels": ["kotlin", "bintray", "gradle"],
+    "public_download_numbers": false,
+    "public_stats": false
+  },
+		
+  "version": {
+    "name": "0.0.1",
+    "gpgSign": false
+  },
+	
+  "files":
+  [
+    {"includePattern": "build/libs/(.*)", "uploadPattern": "de.swirtz/sekurity/0.0.1/$1"}	
+  ],
+  "publish": true
+	
+}

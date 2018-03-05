@@ -4,3 +4,12 @@ before_install:
   - chmod -R +x src 
   - chmod +x gradlew
 
+before_deploy:	
+  - ./gradlew generatePomFileForMavenPublication
+
+deploy:
+  provider: bintray
+  file: "descriptor.json"
+  user: $BINTRAY_USER
+  key: $BINTRAY_KEY
+  dry-run: false

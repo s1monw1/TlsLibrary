@@ -5,8 +5,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
 val kotlinxCoroutinesVersion = "0.22.2"
 
+project.group = "de.swirtz"
+project.version = "0.0.1"
+
 plugins {
     kotlin("jvm") version "1.2.30"
+    `maven-publish`
 }
 
 kotlin {
@@ -36,9 +40,9 @@ repositories {
 }
 
 val fatJar = task("fatJar", type = Jar::class) {
-    val version = "0.0.1-SNAPSHOT"
     val applicationName = "sekurity"
-    baseName = "$applicationName-$version"
+    classifier = "fat"
+    baseName = "$applicationName"
     from(configurations.runtime.map {
         if (it.isDirectory) it else zipTree(it)
     })
@@ -52,5 +56,25 @@ tasks {
 
     withType(Test::class.java) {
         testLogging.showStandardStreams = true
+    }
+
+    withType<GenerateMavenPom>{
+        destination = file("$buildDir/libs/${fatJar.archiveName}.pom")
+    }
+
+}
+
+publishing {
+    repositories {
+        maven {
+            // change to point to your repo, e.g. http://my.org/repo
+            url = uri("$buildDir/repo")
+        }
+    }
+    (publications) {
+        "mavenJava"(MavenPublication::class) {
+            from(components["java"])
+            artifact(fatJar)
+        }
     }
 }
