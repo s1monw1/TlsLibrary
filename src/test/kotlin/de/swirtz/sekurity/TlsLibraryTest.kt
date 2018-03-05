@@ -3,6 +3,7 @@ package de.swirtz.sekurity
 import de.swirtz.sekurity.api.serverSocketFactory
 import de.swirtz.sekurity.api.socketFactory
 import de.swirtz.sekurity.samples.TLSServer
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.io.DataOutputStream
@@ -16,6 +17,9 @@ class TlsLibraryTest {
 
     @Before
     fun setup() = startServer()
+
+    @After
+    fun destroy() = tlsServer.stop()
 
     @Test
     fun clientServerConnTest() {

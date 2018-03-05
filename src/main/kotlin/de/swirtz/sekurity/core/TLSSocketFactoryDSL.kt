@@ -61,7 +61,11 @@ class TLSSocketFactoryProvider(init: ProviderConfiguration.() -> Unit) {
 
     private fun loadKeyStore(store: Store) = KeyStore.getInstance(store.fileType).apply {
         LOG.debug("load keystore from ${store.name}. current dir: ${Paths.get(".").toFile().absolutePath}")
-        load(FileInputStream(store.name), store.password)
+        try {
+            load(FileInputStream(store.name), store.password)
+        }catch (e: Exception){
+            LOG.debug("Exception when loading file", e)
+        }
     }
 }
 
