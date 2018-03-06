@@ -87,8 +87,8 @@ publishing {
 bintray {
     val bintrayUser = project.findProperty("bintrayUser") as String?
     val bintrayApiKey = project.findProperty("bintrayApiKey") as String?
-    user = "s1monw1"
-    key = "b480d54109a1e55e5ea88a8d9a3defe6eea63325"
+    user = bintrayUser
+    key = bintrayApiKey
     publish = true
     setPublications(publicationName)
     pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
