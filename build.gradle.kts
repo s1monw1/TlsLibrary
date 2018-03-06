@@ -47,6 +47,7 @@ repositories {
 }
 val shadowJar: ShadowJar by tasks
 shadowJar.apply {
+    baseName = "sekurity"
     classifier = null
 }
 
@@ -93,7 +94,7 @@ bintray {
     setPublications(publicationName)
     pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
         repo = "SeKurity"
-        name = project.name
+        name = "SeKurity"
         userOrg = "simon-wirtz"
         description = "Simple Lib for TLS/SSL socket handling written in Kotlin"
         setLabels("kotlin")
