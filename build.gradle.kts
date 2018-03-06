@@ -99,7 +99,8 @@ bintray {
         name = "SeKurity"
         userOrg = "simon-wirtz"
         websiteUrl = "https://blog.simon-wirtz.de"
-        vcsUrl = "https://github.com/s1monw1/TlsLibrary"
+        githubRepo = "https://github.com/s1monw1/TlsLibrary"
+        vcsUrl = "git@github.com:s1monw1/TlsLibrary.git"
         description = "Simple Lib for TLS/SSL socket handling written in Kotlin"
         setLabels("kotlin")
         setLicenses("MIT")
