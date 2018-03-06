@@ -4,5 +4,5 @@ before_install:
   - chmod -R +x src 
   - chmod +x gradlew
 
-script: ./gradlew bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayApiKey=$BINTRAY_KEY
+script: ./gradlew clean bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayApiKey=$BINTRAY_KEY
 
