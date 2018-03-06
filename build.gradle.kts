@@ -11,6 +11,7 @@ val kotlinxCoroutinesVersion = "0.22.2"
 
 project.group = "de.swirtz"
 project.version = "0.0.1"
+val artifactID = "sekurity"
 
 plugins {
     kotlin("jvm") version "1.2.30"
@@ -47,7 +48,7 @@ repositories {
 }
 val shadowJar: ShadowJar by tasks
 shadowJar.apply {
-    baseName = "sekurity"
+    baseName = artifactID
     classifier = null
 }
 
@@ -68,6 +69,7 @@ val publicationName = "tlslib"
 publishing {
     publications.invoke {
         publicationName(MavenPublication::class) {
+            artifactId = artifactID
             artifact(shadowJar)
             pom.withXml {
                 val dependenciesNode = asNode().appendNode("dependencies")
