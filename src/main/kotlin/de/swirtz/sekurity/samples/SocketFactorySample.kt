@@ -4,6 +4,8 @@ import de.swirtz.sekurity.api.socketFactory
 
 
 fun main(args: Array<String>) {
+
+    "Hello World".groupingBy { it }.eachCount()
     val fac = socketFactory {
         keyManager {
             open("certsandstores/clientkeystore") withPass "123456" ofType "jks"
