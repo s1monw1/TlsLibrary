@@ -2,6 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.ShadowApplicationPlugin
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.jfrog.bintray.gradle.BintrayPlugin
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
+import org.gradle.api.publish.maven.MavenPom
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import com.jfrog.bintray.gradle.BintrayExtension
@@ -49,24 +50,25 @@ shadowJar.apply {
     classifier = null
 }
 
+fun MavenPom.addDependencies() = withXml {
+    asNode().appendNode("dependencies").let { depNode ->
+        configurations.compile.allDependencies.forEach {
+            depNode.appendNode("dependency").apply {
+                appendNode("groupId", it.group)
+                appendNode("artifactId", it.name)
+                appendNode("version", it.version)
+            }
+        }
+    }
+}
+
 val publicationName = "tlslib"
 publishing {
     publications.invoke {
         publicationName(MavenPublication::class) {
             artifactId = artifactID
             artifact(shadowJar)
-            pom.withXml {
-                asNode().appendNode("dependencies").let { depNode ->
-                    //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
-                    configurations.compile.allDependencies.forEach {
-                        depNode.appendNode("dependency").apply {
-                            appendNode("groupId", it.group)
-                            appendNode("artifactId", it.name)
-                            appendNode("version", it.version)
-                        }
-                    }
-                }
-            }
+            pom.addDependencies()
         }
     }
 }
