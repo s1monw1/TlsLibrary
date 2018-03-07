@@ -25,10 +25,6 @@ kotlin {
     experimental.coroutines = Coroutines.ENABLE
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
 dependencies {
     compile(kotlin("stdlib-jre8", kotlinVersion))
     compile(kotlin("reflect", kotlinVersion))
@@ -46,23 +42,11 @@ repositories {
     mavenCentral()
     jcenter()
 }
+
 val shadowJar: ShadowJar by tasks
 shadowJar.apply {
     baseName = artifactID
     classifier = null
-}
-
-tasks {
-    withType(GradleBuild::class.java) {
-        dependsOn(shadowJar)
-    }
-    withType(Test::class.java) {
-        testLogging.showStandardStreams = true
-    }
-
-    withType<GenerateMavenPom> {
-        destination = file("$buildDir/libs/${shadowJar.archiveName}.pom")
-    }
 }
 
 val publicationName = "tlslib"
@@ -72,14 +56,14 @@ publishing {
             artifactId = artifactID
             artifact(shadowJar)
             pom.withXml {
-                val dependenciesNode = asNode().appendNode("dependencies")
-
-                //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
-                configurations.compile.allDependencies.forEach {
-                    dependenciesNode.appendNode("dependency").apply {
-                        appendNode("groupId", it.group)
-                        appendNode("artifactId", it.name)
-                        appendNode("version", it.version)
+                asNode().appendNode("dependencies").let { depNode ->
+                    //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                    configurations.compile.allDependencies.forEach {
+                        depNode.appendNode("dependency").apply {
+                            appendNode("groupId", it.group)
+                            appendNode("artifactId", it.name)
+                            appendNode("version", it.version)
+                        }
                     }
                 }
             }
@@ -87,11 +71,10 @@ publishing {
     }
 }
 
+fun findProperty(s: String) = project.findProperty(s) as String?
 bintray {
-    val bintrayUser = project.findProperty("bintrayUser") as String?
-    val bintrayApiKey = project.findProperty("bintrayApiKey") as String?
-    user = bintrayUser
-    key = bintrayApiKey
+    user = findProperty("bintrayUser")
+    key = findProperty("bintrayApiKey")
     publish = true
     setPublications(publicationName)
     pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
@@ -106,4 +89,19 @@ bintray {
         setLicenses("MIT")
         desc = description
     })
+}
+
+tasks {
+    withType(GradleBuild::class.java) {
+        dependsOn(shadowJar)
+    }
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+    withType(Test::class.java) {
+        testLogging.showStandardStreams = true
+    }
+    withType<GenerateMavenPom> {
+        destination = file("$buildDir/libs/${shadowJar.archiveName}.pom")
+    }
 }
