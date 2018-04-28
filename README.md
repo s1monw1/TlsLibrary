@@ -63,10 +63,10 @@ In your Gradle build, simply include the following repo as well as dependency:
 
 ```kotlin
 maven { 
-    setUrl("https://simon-wirtz.bintray.com/SeKurity"
+    setUrl("https://dl.bintray.com/s1m0nw1/SeKurity/")
 }
 
-compile("de.swirtz:sekurity:0.0.1")
+compile("de.swirtz:sekurity:0.0.x")
 
 ```
 
