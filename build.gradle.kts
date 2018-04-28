@@ -27,7 +27,7 @@ kotlin {
 }
 
 dependencies {
-    compile(kotlin("stdlib-jre8", kotlinVersion))
+    compile(kotlin("stdlib-jdk8", kotlinVersion))
     compile(kotlin("reflect", kotlinVersion))
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
 
