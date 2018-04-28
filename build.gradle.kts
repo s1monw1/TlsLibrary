@@ -11,11 +11,11 @@ val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPlu
 val kotlinxCoroutinesVersion = "0.22.2"
 
 project.group = "de.swirtz"
-project.version = "0.0.1"
+project.version = "0.0.2"
 val artifactID = "sekurity"
 
 plugins {
-    kotlin("jvm") version "1.2.30"
+    kotlin("jvm") version "1.2.40"
     `maven-publish`
     id("com.jfrog.bintray") version "1.8.0"
     id("com.github.johnrengelman.shadow") version "2.0.2"
@@ -82,8 +82,8 @@ bintray {
     pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
         repo = "SeKurity"
         name = "SeKurity"
-        userOrg = "simon-wirtz"
-        websiteUrl = "https://blog.simon-wirtz.de"
+        userOrg = "s1m0nw1"
+        websiteUrl = "https://kotlinexpertise.com"
         githubRepo = "s1monw1/TlsLibrary"
         vcsUrl = "https://github.com/s1monw1/TlsLibrary"
         description = "Simple Lib for TLS/SSL socket handling written in Kotlin"
