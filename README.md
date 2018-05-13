@@ -28,10 +28,10 @@ In the following you can see some basic examples of using the Kotlin DSL for set
 ```kotlin
 val fac = createSocketFactory {
             keyManager {
-                open("certsandstores/clientkeystore") withPass "123456" ofType "jks"
+                open("certsandstores/clientkeystore", "jks") withPass "123456"
             }
             trustManager {
-                open("certsandstores/myTruststore") withPass "123456" ofType "jks"
+                open("certsandstores/myTruststore", "jks") withPass "123456"
             }
             sockets {
                 cipherSuites = listOf("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
@@ -49,7 +49,7 @@ val socket = fac.createSocket("192.168.3.10", 443)
 ```kotlin
 val fac = createServerSocketFactory {
         keyManager {
-            open("certsandstores/clientkeystore") withPass "123456" ofType "jks"
+            open("certsandstores/clientkeystore", "jks") withPass "123456"
         }
     }
 
