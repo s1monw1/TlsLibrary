@@ -76,20 +76,16 @@ annotation class TlsDSLMarker
 data class SocketConfiguration(var cipherSuites: List<String>? = null, var timeout: Int? = null, var clientAuth: Boolean = false)
 
 @TlsDSLMarker
-class Store(val name: String) {
+class Store(val name: String, val fileType: String = "JKS") {
     var algorithm: String? = null
     var password: CharArray? = null
-    var fileType: String = "JKS"
+
 
     infix fun withPass(pass: String) = apply {
         password = pass.toCharArray()
     }
 
-    infix fun ofType(type: String) = apply {
-        fileType = type
-    }
-
-    infix fun using(algo: String) = apply {
+    infix fun algorithm(algo: String) = apply {
         algorithm = algo
     }
 
@@ -102,7 +98,7 @@ class ProviderConfiguration {
     var tmConfig: Store? = null
     var socketConfig: SocketConfiguration? = null
 
-    fun open(name: String) = Store(name)
+    fun open(name: String, type: String = "JKS") = Store(name, type)
 
     fun sockets(configInit: SocketConfiguration.() -> Unit) {
         this.socketConfig = SocketConfiguration().apply(configInit)

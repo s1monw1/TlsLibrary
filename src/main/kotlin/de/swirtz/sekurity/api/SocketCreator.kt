@@ -21,11 +21,3 @@ fun socketFactory(protocols: List<String> = defaultTLSProtocols, configuration: 
         with(TLSSocketFactoryProvider(configuration)) {
             this.createSocketFactory(protocols)
         }
-
-fun main(args: Array<String>) {
-    var charAr = Array(5) { ' ' }
-    for (i in 0..4) {
-        println("Please Enter the character Number ${i + 1}")
-        charAr[i] = readLine()?.get(0) ?: throw IllegalArgumentException()
-    }
-}

@@ -11,11 +11,11 @@ val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPlu
 val kotlinxCoroutinesVersion = "0.22.2"
 
 project.group = "de.swirtz"
-project.version = "0.0.2"
+project.version = "0.0.3"
 val artifactID = "sekurity"
 
 plugins {
-    kotlin("jvm") version "1.2.40"
+    kotlin("jvm") version "1.2.41"
     `maven-publish`
     id("com.jfrog.bintray") version "1.8.0"
     id("com.github.johnrengelman.shadow") version "2.0.2"

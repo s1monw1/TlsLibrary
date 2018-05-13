@@ -5,17 +5,20 @@ import de.swirtz.sekurity.api.socketFactory
 
 fun main(args: Array<String>) {
 
-    "Hello World".groupingBy { it }.eachCount()
     val fac = socketFactory {
         keyManager {
-            open("certsandstores/clientkeystore") withPass "123456" ofType "jks"
+            open("certsandstores/clientkeystore", "jks") withPass "123456"
         }
         trustManager {
-            open("certsandstores/myTruststore") withPass "123456" ofType "jks"
+            open("certsandstores/myTruststore", "jks") withPass "123456"
         }
         sockets {
-            cipherSuites = listOf("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-                    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA", "TLS_DHE_RSA_WITH_AES_256_CBC_SHA")
+            cipherSuites = listOf(
+                "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+                "TLS_DHE_RSA_WITH_AES_256_CBC_SHA"
+            )
             timeout = 10_000
         }
     }

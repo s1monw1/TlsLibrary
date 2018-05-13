@@ -7,7 +7,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.io.DataOutputStream
-import javax.net.ssl.SSLSocketFactory
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -35,22 +34,19 @@ class TlsLibraryTest {
         assertTrue { socket.isClosed }
     }
 
-    private fun createClientSocketFactory(): SSLSocketFactory {
-        val fac = socketFactory {
-            trustManager {
-                open("src/test/resources/myTrustStore") withPass "123456" ofType "jks"
-            }
-            sockets {
-                timeout = 10_000
-            }
+    private fun createClientSocketFactory() = socketFactory {
+        trustManager {
+            open("src/test/resources/myTrustStore") withPass "123456"
         }
-        return fac
+        sockets {
+            timeout = 10_000
+        }
     }
 
     private fun startServer() {
         val fac = serverSocketFactory {
             keyManager {
-                open("src/test/resources/clientkeystore") withPass "123456" ofType "jks"
+                open("src/test/resources/clientkeystore") withPass "123456"
             }
             sockets {
                 clientAuth = true

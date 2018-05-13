@@ -25,17 +25,21 @@ class TLSServer(private val port: Int, private val socketFactory: ServerSocketFa
         LOG.debug("started server on $port")
         launch {
             while (running.get()) {
-                LOG.debug("wait for client to connect")
-                with(socket.accept()) {
-                    LOG.debug("accepted socket $this")
-                    DataInputStream(getInputStream()).use { d ->
-                        var readUTF = d.readUTF()
-                        while (readUTF != null) {
-                            LOG.debug("Read: '$readUTF'")
-                            read.append(readUTF)
-                            readUTF = d.readUTF()
-                        }
-                    }
+                waitForClientAndRead()
+            }
+        }
+    }
+
+    private fun waitForClientAndRead() {
+        LOG.debug("wait for client to connect")
+        with(socket.accept()) {
+            LOG.debug("accepted socket $this")
+            DataInputStream(getInputStream()).use { d ->
+                var readUTF = d.readUTF()
+                while (readUTF != null) {
+                    LOG.debug("Read: '$readUTF'")
+                    read.append(readUTF)
+                    readUTF = d.readUTF()
                 }
             }
         }
@@ -44,6 +48,7 @@ class TLSServer(private val port: Int, private val socketFactory: ServerSocketFa
     fun stop() {
         running.set(false)
         socket.close()
+        read = StringBuilder()
     }
 
 
